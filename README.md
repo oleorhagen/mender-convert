@@ -1,6 +1,6 @@
 [![Build Status](https://gitlab.com/Northern.tech/Mender/mender-convert/badges/next/pipeline.svg)](https://gitlab.com/Northern.tech/Mender/mender-convert/pipelines)
 
-# mender-convert
+# Mender-convert
 
 Mender is an open source over-the-air (OTA) software updater for embedded Linux devices. Mender comprises a client running at the embedded device, as well as a server that manages deployments across many devices.
 
@@ -69,30 +69,30 @@ type you are implementing.
 ```
 
 
-### Docker environment for mender-convert
+### Docker environment for Mender-convert
 
-To make using mender-convert easier, a reference setup using a Docker
+To make using Mender-convert easier, a reference setup using a Docker
 container is provided.
 
 You need to [install Docker Engine](https://docs.docker.com/install) to use
 this environment.
 
 
-#### Build the mender-convert container image
+#### Build the Mender-convert container image
 
-Build a container with all required dependencies for `mender-convert`:
+Build a container with all required dependencies for `Mender-convert`:
 
 ```bash
 ./docker-build
 ```
 
-This will create a container image which you can use to run `mender-convert`
+This will create a container image which you can use to run `Mender-convert`
 without polluting your host environment with the necessary dependencies.
 
 
-#### Use the mender-convert container image
+#### Use the Mender-convert container image
 
-Run mender-convert from inside the container with your desired options, e.g.
+Run Mender-convert from inside the container with your desired options, e.g.
 
 ```bash
 MENDER_ARTIFACT_NAME=release-1 ./docker-mender-convert \
@@ -108,10 +108,10 @@ information.
 After it finishes, you can find your images in the `deploy` directory on your
 host machine!
 
-## Using mender-convert without Docker
+## Using Mender-convert without Docker
 
 In order to be able to manipulate and create filesystem and disk images,
-mender-convert has a few dependencies, and their version and name vary between
+Mender-convert has a few dependencies, and their version and name vary between
 Linux distributions. Here is an example of how to install the dependencies on a
 Debian based distribution:
 
