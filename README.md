@@ -26,15 +26,15 @@ For more detailed information about `mender-convert` please visit the
 Download the raw Raspberry Pi disk image into a subdirectory input:
 
 ```bash
-mkdir -p input
-cd input
-wget https://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-06-24/2019-06-20-raspbian-buster-lite.zip
+$ mkdir -p input
+$ cd input
+$ wget https://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-06-24/2019-06-20-raspbian-buster-lite.zip
 ```
 
 Extract the raw Raspberry Pi disk image:
 
 ```bash
-unzip 2019-06-20-raspbian-buster-lite.zip && cd ..
+$ unzip 2019-06-20-raspbian-buster-lite.zip && cd ..
 ```
 
 Bootstrap the demo rootfs overlay that is configured to connect to
@@ -47,25 +47,25 @@ Professional.
 type you are implementing.
 
 #### Using the [Mender demo server](https://docs.mender.io/getting-started/on-premise-installation/create-a-test-environment)
-```
-./scripts/bootstrap-rootfs-overlay-demo-server.sh \
-    --output-dir ${PWD}/rootfs_overlay_demo \
-    --server-ip 192.168.1.1
+```bash
+$ ./scripts/bootstrap-rootfs-overlay-demo-server.sh \
+     --output-dir ${PWD}/rootfs_overlay_demo \
+     --server-ip 192.168.1.1
 ```
 
 #### Using the [Mender production server](https://docs.mender.io/administration/production-installation)
-```
-./scripts/bootstrap-rootfs-overlay-production-server.sh \
-    --output-dir ${PWD}/rootfs_overlay_demo \
-    --server-url https://foobar.mender.io \
-    [ --server-cert ~/server.crt ]
+```bash
+$ ./scripts/bootstrap-rootfs-overlay-production-server.sh \
+     --output-dir ${PWD}/rootfs_overlay_demo \
+     --server-url https://foobar.mender.io \
+     [ --server-cert ~/server.crt ]
 ```
 
 #### Using [Mender Professional](https://mender.io/products/mender-professional)
-```
-./scripts/bootstrap-rootfs-overlay-hosted-server.sh \
-    --output-dir ${PWD}/rootfs_overlay_demo \
-    --tenant-token "Paste token from Mender Professional"
+```bash
+$ ./scripts/bootstrap-rootfs-overlay-hosted-server.sh \
+     --output-dir ${PWD}/rootfs_overlay_demo \
+     --tenant-token "Paste token from Mender Professional"
 ```
 
 
@@ -83,7 +83,7 @@ this environment.
 Build a container with all required dependencies for `Mender-convert`:
 
 ```bash
-./docker-build
+$ ./docker-build
 ```
 
 This will create a container image which you can use to run `Mender-convert`
@@ -95,10 +95,10 @@ without polluting your host environment with the necessary dependencies.
 Run Mender-convert from inside the container with your desired options, e.g.
 
 ```bash
-MENDER_ARTIFACT_NAME=release-1 ./docker-mender-convert \
-    --disk-image input/2019-04-08-raspbian-stretch-lite.img \
-    --config configs/raspberrypi3_config \
-    --overlay rootfs_overlay_demo/
+$ MENDER_ARTIFACT_NAME=release-1 ./docker-mender-convert \
+     --disk-image input/2019-04-08-raspbian-stretch-lite.img \
+     --config configs/raspberrypi3_config \
+     --overlay rootfs_overlay_demo/
 ```
 
 Conversion will take 10-30 minutes, depending on image size and resources
@@ -115,17 +115,17 @@ Mender-convert has a few dependencies, and their version and name vary between
 Linux distributions. Here is an example of how to install the dependencies on a
 Debian based distribution:
 
-```
-sudo apt install $(cat requirements-deb.txt)
+```bash
+$ sudo apt install $(cat requirements-deb.txt)
 ```
 
 Start the conversion process with:
 
 ```bash
-MENDER_ARTIFACT_NAME=release-1 ./mender-convert \
-    --disk-image input/2019-04-08-raspbian-stretch-lite.img \
-    --config configs/raspberrypi3_config \
-    --overlay rootfs_overlay_demo/
+$ MENDER_ARTIFACT_NAME=release-1 ./mender-convert \
+     --disk-image input/2019-04-08-raspbian-stretch-lite.img \
+     --config configs/raspberrypi3_config \
+     --overlay rootfs_overlay_demo/
 ```
 
 **NOTE!** You will be prompted to enter `sudo` password during the conversion
