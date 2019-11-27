@@ -88,8 +88,9 @@ Build a container with all required dependencies for `Mender-convert`:
 $ ./docker-build
 ```
 
-This will create a container image which you can use to run `Mender-convert`
-without polluting your host environment with the necessary dependencies.
+This will create a container image with the name `mender-conver` which you can
+use to run `Mender-convert` without polluting your host environment with the
+necessary dependencies.
 
 
 #### Use the Mender-convert container image
