@@ -34,7 +34,9 @@ $ wget https://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019
 Extract the raw Raspberry Pi disk image:
 
 ```bash
-$ unzip 2019-06-20-raspbian-buster-lite.zip && cd ..
+$ unzip 2019-06-20-raspbian-buster-lite.zip
+$ MC_IMGFILE=$(ls *raspbian-buster*.img)
+$ cd ..
 ```
 
 Bootstrap the demo rootfs overlay that is configured to connect to
@@ -96,7 +98,7 @@ Run Mender-convert from inside the container with your desired options, e.g.
 
 ```bash
 $ MENDER_ARTIFACT_NAME=release-1 ./docker-mender-convert \
-     --disk-image input/2019-04-08-raspbian-stretch-lite.img \
+     --disk-image input/$MC_IMGFILE \
      --config configs/raspberrypi3_config \
      --overlay rootfs_overlay_demo/
 ```
@@ -123,7 +125,7 @@ Start the conversion process with:
 
 ```bash
 $ MENDER_ARTIFACT_NAME=release-1 ./mender-convert \
-     --disk-image input/2019-04-08-raspbian-stretch-lite.img \
+     --disk-image input/$MC_IMGFILE \
      --config configs/raspberrypi3_config \
      --overlay rootfs_overlay_demo/
 ```
