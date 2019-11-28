@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # Copyright 2019 Northern.tech AS
 #
@@ -14,17 +14,15 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-set -e
+# Run a command, capture output and log it
+#
+#  $1 - command to run
+function run_and_log_cmd() {
+  local -r cmd="${1}"
 
-IMAGE_NAME=${IMAGE_NAME:-mender-convert}
+  log_debug "Running: \n\r\n\r\t ${cmd}"
+  log_debug "Run result: \n\r"
 
-MENDER_CONVERT_DIR="$(pwd)"
-
-docker run \
-       -v $MENDER_CONVERT_DIR:/mender-convert \
-       --privileged=true \
-       --cap-add=SYS_MODULE \
-       -v /dev:/dev \
-       -v /lib/modules:/lib/modules:ro \
-       --env MENDER_ARTIFACT_NAME=${MENDER_ARTIFACT_NAME} \
-       $IMAGE_NAME "$@"
+  result=$(eval ${cmd})
+  log_debug "${result}"
+}

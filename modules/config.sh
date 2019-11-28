@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # Copyright 2019 Northern.tech AS
 #
@@ -14,17 +14,9 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-set -e
-
-IMAGE_NAME=${IMAGE_NAME:-mender-convert}
-
-MENDER_CONVERT_DIR="$(pwd)"
-
-docker run \
-       -v $MENDER_CONVERT_DIR:/mender-convert \
-       --privileged=true \
-       --cap-add=SYS_MODULE \
-       -v /dev:/dev \
-       -v /lib/modules:/lib/modules:ro \
-       --env MENDER_ARTIFACT_NAME=${MENDER_ARTIFACT_NAME} \
-       $IMAGE_NAME "$@"
+# Read in the array of config files to process
+read -a configs <<< "${@}"
+for config in "${configs[@]}"; do
+    log_info "Using configuration file: ${config}"
+    source "${config}"
+done

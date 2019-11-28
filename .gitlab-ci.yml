@@ -3,29 +3,16 @@ image: docker:git
 variables:
   DOCKER_REPOSITORY: mendersoftware/mender-convert
 
+include:
+  - project: 'Northern.tech/Mender/mendertesting'
+    file: '.gitlab-ci-check-commits.yml'
+  - project: 'Northern.tech/Mender/mendertesting'
+    file: '.gitlab-ci-check-license.yml'
+
 stages:
   - test
   - build
-
-test:
-  stage: test
-  before_script:
-    - apk add --no-cache bash perl-utils
-    # Rename the branch we're on, so that it's not in the way for the
-    # subsequent fetch. It's ok if this fails, it just means we're not on any
-    # branch.
-    - git branch -m temp-branch || true
-    # Git trick: Fetch directly into our local branches instead of remote
-    # branches.
-    - git fetch origin 'refs/heads/*:refs/heads/*'
-    # Get last remaining tags, if any.
-    - git fetch --tags origin
-    - git clone http://github.com/mendersoftware/mendertesting
-  script:
-    # Check commit compliance.
-    - mendertesting/check_commits.sh
-    # Check licenses
-    - mendertesting/check_license.sh
+  - test_acceptance
 
 build:
   stage: build
@@ -39,3 +26,31 @@ build:
     paths:
       - image.tar
 
+test_acceptance:
+  stage: test_acceptance
+  image: docker:18-dind
+  tags:
+    - mender-qa-slave
+  dependencies:
+    - build
+  before_script:
+    # Start up Docker (DonD)
+    - /usr/local/bin/dockerd-entrypoint.sh &
+    - sleep 10
+    - export DOCKER_HOST="unix:///var/run/docker.sock"
+    - docker version
+    # Install dependencies
+    - apk --update --no-cache add bash wget git util-linux mtools python
+      py-pip gcc python2-dev libffi-dev libc-dev openssl-dev make sudo
+    - pip install "pytest>=3.0" "Fabric>=1.13.0, <2" pytest-html
+    # Load image under test
+    - export IMAGE_NAME=$DOCKER_REPOSITORY:pr
+    - docker load -i image.tar
+  script:
+    - ./scripts/run-tests.sh
+  artifacts:
+    expire_in: 2w
+    when: always
+    paths:
+      - results_*.xml
+      - report_*.html

@@ -1,5 +1,8 @@
-input/
-output/
-device-image-shell/output
-mendertesting/
-integration/
+deploy
+input
+work
+rootfs_overlay_demo/*
+tests
+mender_local_config
+*.xml
+*.html
