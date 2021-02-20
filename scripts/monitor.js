@@ -62,7 +62,7 @@ JSDOM.fromURL(url, {}).then(dom => {
     if (matches[0].text !== imageName) {
         console.log("We've got a new release! \\o/");
         console.log("BBB_DEBIAN_SDCARD_IMAGE_URL=${url}/${matches[0].text}")
-        updateURLLink("BBB_DEBIAN_SDCARD_IMAGE_URL=${url}/${matches[0].text}")
+        updateURLLink("BBB_DEBIAN_SDCARD_IMAGE_URL=\"${url}/${matches[0].text}\"")
     }
 });
 
