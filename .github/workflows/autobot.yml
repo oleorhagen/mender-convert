@@ -5,12 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
+      - uses: actions/setup-node@v2
       - name: Make changes to pull request
-      - run: apt update && apt install -yyq nodejs npm git
       - run: npm install jsdom
-      - run: cd ./scripts
-      - run: node ./monitor-bb.js
+      - run: cd ./scripts && node ./monitor-bb.js
 
       - name: Create Pull Request
         id: cpr
