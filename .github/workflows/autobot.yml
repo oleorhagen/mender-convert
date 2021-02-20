@@ -7,10 +7,10 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Make changes to pull request
-        run: apt update && apt install -yyq nodejs npm git
-        run: npm install jsdom
-        run: cd ./scripts
-        run: node ./monitor-bb.js
+      - run: apt update && apt install -yyq nodejs npm git
+      - run: npm install jsdom
+      - run: cd ./scripts
+      - run: node ./monitor-bb.js
 
       - name: Create Pull Request
         id: cpr
