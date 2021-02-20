@@ -9,7 +9,9 @@ jobs:
       - name: Make changes to pull request
         run: |
             npm install jsdom
+            node monitor.js
             node monitor-rpi.js
+            node monitor-bb.js
         working-directory: scripts
 
       - name: Create Pull Request
