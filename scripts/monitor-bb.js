@@ -3,27 +3,21 @@ const { JSDOM } = jsdom;
 
 const fs = require('fs')
 
+const reg = "[0-9]{4}-[0-9]{2}-[0-9]{1,2}/"
 
 // Read the input file, and parse the variable input
 try {
     const data = fs.readFileSync('test/run-tests.sh', 'utf8')
           .split('\n')
           .filter(line => line.match("BBB_DEBIAN_EMMC_IMAGE_URL=.*"))
-    console.log("Data:")
-    console.log(data[0])
     var line = data[0]
     var m = line.match(".*=\"(?<url>[a-zA-Z-://\.]*)(?<latestDate>[0-9]{4}-[0-9]{2}-[0-9]{1,2}/).*")
-    console.log(m)
-    console.log(m.groups.url)
-    console.log(m.groups.latestDate)
     var url = m.groups.url
     var latestDate = m.groups.latestDate
 } catch (err) {
     console.error(err)
     process.exit(1)
 }
-
-const reg = "[0-9]{4}-[0-9]{2}-[0-9]{1,2}/"
 
 async function getNewBoneDebian(url) {
     var ret = "";
@@ -73,11 +67,7 @@ JSDOM.fromURL(url, {}).then(async dom => {
         console.error(`${url}/${latestDate}/`);
         // Get the new bone-debian image
         var newVar = await getNewBoneDebian(`${url}/${matches[0]}buster-console`)
-        console.log(`newVar: ${newVar}`)
         if (newVar) {
-            console.log("## Auto-update")
-            console.log(`# latestDate: ${matches[0]}`)
-            console.log(`${newVar}`)
             updateURLLink(newVar)
         }
     }
@@ -87,8 +77,6 @@ function updateURLLink(newLine) {
     console.error("Updating the variable")
     try {
         const data = fs.readFileSync('test/run-tests.sh', 'utf8').replace(/## Auto-update\nBBB_DEBIAN_EMMC_IMAGE_URL=.*/, `## Auto-update\n${newLine}\n`)
-        console.log(data)
-        console.error("Writing file...")
         fs.writeFile('test/run-tests.sh', data, (err, data) => {
             if (err) {
                 console.error(err)

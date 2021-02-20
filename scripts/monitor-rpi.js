@@ -1,9 +1,25 @@
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 
-const url = "http://downloads.raspberrypi.org/raspbian_lite/images"
-const imageName = "raspbian_lite-2019-09-30"
-const reg = "raspbian_lite-(?<date>[0-9]{4}-[0-9]{2}-[0-9]{1,2})/(?<updated>[0-9]{4}-[0-9]{2}-[0-9]{1,2}).*$"
+const fs = require('fs')
+
+// Read the input file, and parse the variable input
+try {
+    const data = fs.readFileSync('test/run-tests.sh', 'utf8')
+          .split('\n')
+          .filter(line => line.match("RASPBIAN_IMAGE_URL=.*"))
+    var line = data[0]
+    console.log(line)
+    var reg = "raspbian_lite-(?<date>[0-9]{4}-[0-9]{2}-[0-9]{1,2})/(?<updated>[0-9]{4}-[0-9]{2}-[0-9]{1,2}).*$"
+    var m = line.match(".*=\"(?<url>[a-zA-Z-://\._]*)(?<imageName>raspbian_lite-[0-9]{4}-[0-9]{2}-[0-9]{1,2})/(?<updated>[0-9]{4}-[0-9]{2}-[0-9]{1,2}).*$")
+    console.log(m)
+    var url = m.groups.url
+    var imageName = m.groups.imageName
+    var updated = m.groups.updated
+} catch (err) {
+    console.error(err)
+    process.exit(1)
+}
 
 JSDOM.fromURL(url, {}).then(dom => {
     var document = dom.window.document;
@@ -30,9 +46,27 @@ JSDOM.fromURL(url, {}).then(dom => {
     });
     var matchOn = matches[0].input.split("/")[0]
     if (matchOn !== imageName) {
-        console.log("We've got a new release! \\o/");
-        console.log(matchOn)
-        console.log("Old match")
-        console.log(imageName)
+        console.error("We've got a new release! \\o/");
+        console.error(matchOn)
+        console.error("Old match")
+        console.error(imageName)
+        // Produce the new output string
+        console.log(`RASPBIAN_IMAGE_URL=\"${url}${matches[0].input.split(" ")[0]}-raspbian-buster-lite.zip\"`)
+        updateURLLink(`RASPBIAN_IMAGE_URL=\"${url}${matches[0].input.split(" ")[0]}-raspbian-buster-lite.zip\"`)
     }
 });
+
+function updateURLLink(newLine) {
+    console.error("Updating the variable")
+    try {
+        const data = fs.readFileSync('test/run-tests.sh', 'utf8').replace(/## Auto-update\nRASPBIAN_IMAGE_URL=.*/, `## Auto-update\n${newLine}\n`)
+        fs.writeFile('test/run-tests.sh', data, (err, data) => {
+            if (err) {
+                console.error(err)
+            }
+        })
+    } catch (err) {
+        console.error(err)
+        process.exit(1)
+    }
+}
