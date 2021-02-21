@@ -19,47 +19,34 @@ try {
     process.exit(1)
 }
 
-async function getNewBoneDebian(url) {
-    var ret = "";
-    await JSDOM.fromURL(url, {}).then(dom => {
+function getNewBoneDebian(url) {
+    return JSDOM.fromURL(url, {}).then(dom => {
         var document = dom.window.document;
         var refs = document.getElementsByTagName("a");
-        for (var i=0; i< refs.length; i++) {
-            try {
-                var text = refs[i].textContent;
-                var m = text.match("bone-debian.*\.img\.xz$");
-                if (m) {
-                    console.log("\\o/");
-                    ret = `BBB_DEBIAN_EMMC_IMAGE_URL=${url}/${m.input}`;
-                }
-            } catch(error) {
-                console.log(error);
-            }
-        }
+        var test = Array.from(refs)
+            .filter(ref => ref.textContent.match(("bone-debian.*\.img\.xz$")))
+            .reduce((acc, element) => {
+                acc.push(element.textContent.match("bone-debian.*\.img\.xz$").input)
+                return acc
+            }, [])[0]
+        return `BBB_DEBIAN_EMMC_IMAGE_URL=${url}/${test}`;
     });
-    return ret;
 }
 
 JSDOM.fromURL(url, {}).then(async dom => {
     var document = dom.window.document;
     var table = document.getElementsByTagName("table");
     var rows = table[0].rows;
-    var matches = [];
-    for (var i=0; i< rows.length; i++) {
-        try {
-            var text = rows[i].children[1].textContent;
-            var m = text.match(reg);
-            if (m) {
-                matches.push(text);
-            }
-        } catch(error) {
-            console.log(error);
-        }
-    }
-    // Sort the accumulated matches
-    matches.sort(function(a,b) {
-        return Date.parse(b) - Date.parse(a);
-    });
+    var matches = Array.from(rows)
+        .filter(row => row.children.length == 5)
+        .filter(row => row.children[1].textContent.match(reg))
+        .reduce((acc, row ) => {
+            acc.push(row.children[1].textContent)
+        return acc
+        }, [])
+        .sort((a,b) => {
+            return Date.parse(b) - Date.parse(a)
+        })
     if (matches[0] !== latestDate) {
         console.error("We've got a new release! \\o/");
         console.error(`${url}/${matches[0]}`);
