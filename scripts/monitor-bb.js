@@ -53,7 +53,7 @@ JSDOM.fromURL(url, {}).then(async dom => {
         console.error("Old:");
         console.error(`${url}/${latestDate}/`);
         // Get the new bone-debian image
-        var newVar = await getNewBoneDebian(`${url}/${matches[0]}buster-console`)
+        var newVar = await getNewBoneDebian(`${url}${matches[0]}buster-console`)
         if (newVar) {
             updateURLLink(newVar)
         }
