@@ -1,9 +1,25 @@
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 
+const fs = require('fs')
+
 const url = "https://www.asus.com/us/Single-Board-Computer/Tinker-Board/"
-const imageName = "http://dlcdnet.asus.com/pub/ASUS/mb/Linux/Tinker_Board_2GB/20170417-tinker-board-linaro-stretch-alip-v1.8.zip"
-const reg = "http://dlcdnet.asus.com/pub/ASUS/mb/Linux/Tinker_Board_2GB/(?<date>[0-9]{8})-tinker-board-linaro-stretch-alip-v(?<version>[0-9]\.[0-9]).zip"
+const reg = "(?<image>http://dlcdnet.asus.com/pub/ASUS/mb/Linux/Tinker_Board_2GB/(?<date>[0-9]{8})-tinker-board-linaro-stretch-alip-v(?<version>[0-9]\.[0-9]).zip)"
+
+// Read the input file, and parse the variable input
+try {
+    const data = fs.readFileSync('test/run-tests.sh', 'utf8')
+          .split('\n')
+          .filter(line => line.match("TINKER_IMAGE_URL=.*"))
+    var line = data[0]
+    var m = line.match(`.*=\"${reg}`)
+    var imageName = m[0]
+    var date = m.groups.date
+    var version = m.groups.version
+} catch (err) {
+    console.error(err)
+    process.exit(1)
+}
 
 JSDOM.fromURL(url, {}).then(dom => {
     var document = dom.window.document;
@@ -17,15 +33,17 @@ JSDOM.fromURL(url, {}).then(dom => {
             let vn = parseFloat(regNewMatch.groups.version)
             let vo = parseFloat(regOldMatch.groups.version)
             if (vn > vo) {
-                console.log("A new version is release \\o/")
-                console.log(newRef)
+                console.error("A new version has been released \\o/")
+                var newImage = regNewMatch[0]
+                updateURLLink(`TINKER_IMAGE_URL=\"${newImage}\"`)
                 break;
             } else if ( vn == vo ) {
                 let dn = parseInt(regNewMatch.groups.date)
                 let _do = parseInt(regOldMatch.groups.date)
                 if (dn > _do) {
-                    console.log("A newer version has been released \\o/")
-                    console.log(newRef)
+                    console.error("A newer version has been released \\o/")
+                    var newImage = regNewMatch[0]
+                    updateURLLink(`TINKER_IMAGE_URL=\"${newImage}\"`)
                     break
                 }
             }
@@ -33,3 +51,17 @@ JSDOM.fromURL(url, {}).then(dom => {
         }
     }
 });
+
+function updateURLLink(newLine) {
+    try {
+        const data = fs.readFileSync('test/run-tests.sh', 'utf8').replace(/## Auto-update\nTINKER_IMAGE_URL=.*/, `## Auto-update\n${newLine}\n`)
+        fs.writeFile('test/run-tests.sh', data, (err, data) => {
+            if (err) {
+                console.error(err)
+            }
+        })
+    } catch (err) {
+        console.error(err)
+        process.exit(1)
+    }
+}
