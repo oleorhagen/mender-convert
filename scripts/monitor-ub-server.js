@@ -35,18 +35,13 @@ JSDOM.fromURL(url, {}).then(dom => {
     var matchOn = matches[0].input
     if (matchOn !== imageName) {
         console.log("We've got a new release! \\o/");
-        console.log(matchOn)
-        console.log("Old match")
-        console.log(imageName)
-        console.log(matches[0])
         var newLine = ""
         if (matches[0].groups.minor) {
             newLine = `UBUNTU_SERVER_RPI_IMAGE=\"${url}${matches[0].groups.release}.04.${matches[0].groups.minor}/release/ubuntu-${matches[0].groups.release}.04.${matches[0].groups.minor}-preinstalled-server-armhf+raspi.img.xz\"`
         } else {
             newLine = `UBUNTU_SERVER_RPI_IMAGE=\"${url}${matches[0].groups.release}.04/release/ubuntu-${matches[0].groups.release}.04-preinstalled-server-armhf+raspi.img.xz\"`
         }
-        console.log(newLine)
-        // updateURLLink(`UBUNTU_SERVER_RPI_IMAGE=\"${url}${matchOn}/release/ubuntu-${matchOn}-preinstalled-server-armhf+raspi3.img.xz\"`)
+        updateURLLink(newLine)
     }
 });
 
