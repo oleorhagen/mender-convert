@@ -31,7 +31,8 @@ TINKER_IMAGE_URL="http://dlcdnet.asus.com/pub/ASUS/mb/Linux/Tinker_Board_2GB/201
 
 UBUNTU_IMAGE_URL="https://downloads.mender.io/mender-convert/images/Ubuntu-Bionic-x86-64.img.gz"
 
-UBUNTU_SERVER_RPI_IMAGE_URL="http://cdimage.ubuntu.com/ubuntu/releases/bionic/release/ubuntu-18.04.5-preinstalled-server-armhf+raspi3.img.xz"
+## Auto-update
+UBUNTU_SERVER_RPI_IMAGE_URL="http://cdimage.ubuntu.com/ubuntu/releases/18.04.5/release/ubuntu-18.04.5-preinstalled-server-armhf+raspi3.img.xz"
 
 # Keep common function declarations in separate utils script
 UTILS_PATH=${0/$(basename $0)/test-utils.sh}
