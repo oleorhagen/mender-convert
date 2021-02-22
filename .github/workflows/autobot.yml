@@ -8,7 +8,7 @@ jobs:
       - uses: actions/setup-node@v2
       - name: Make changes to pull request
         run: |
-            npm install jsdom
+            npm ci jsdom
             node monitor-bb.js
             node monitor-bb-sd.js
             node monitor-rpi.js
