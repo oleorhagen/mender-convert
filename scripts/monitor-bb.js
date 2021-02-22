@@ -29,7 +29,7 @@ function getNewBoneDebian(url) {
                 acc.push(element.textContent.match("bone-debian.*\.img\.xz$").input)
                 return acc
             }, [])[0]
-        return `BBB_DEBIAN_EMMC_IMAGE_URL=\"${url}/${test}\"`;
+        return `BBB_DEBIAN_EMMC_IMAGE_URL=\"${url}${test}\"`;
     });
 }
 
