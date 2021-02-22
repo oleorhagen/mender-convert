@@ -1,35 +1,66 @@
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 
+const fs = require('fs')
+
 const url = "http://cdimage.ubuntu.com/ubuntu/releases/"
-const imageName = "18.04.5"
-const reg = "(?<release>[0-9]{2})\.04(?<minor>.*)"
+const reg = ".*(?<release>[0-9]{2})\.04\.?(?<minor>[0-9]{1})?.*"
+
+// Read the input file, and parse the variable input
+try {
+    const data = fs.readFileSync('test/run-tests.sh', 'utf8')
+          .split('\n')
+          .filter(line => line.match("UBUNTU_SERVER_RPI_IMAGE_URL=.*"))
+    var line = data[0]
+    var m = line.match(`.*=\"${reg}\"`)
+    var imageName = m.groups.release
+    var minor = m.groups.minor || 0
+} catch (err) {
+    console.error(err)
+    process.exit(1)
+}
 
 JSDOM.fromURL(url, {}).then(dom => {
     var document = dom.window.document;
     var refs = document.getElementsByTagName("a");
-    var matches = []
-    for (var i=0; i< refs.length; i++) {
-        var textContent = refs[i].textContent
-        var regMatch = textContent.match(reg)
-        if (regMatch) {
-            matches.push(regMatch)
-        }
-    }
-    // Sort the accumulated matches
-    matches.sort(function(a,b) {
-        let al = parseInt(a.groups.release);
-        let bl = parseInt(b.groups.release);
-        if (al == bl) {
-            return parseFloat(b.groups.minor) - parseFloat(a.groups.minor)
-        }
-        return bl - al;
-    });
+    var matches = Array.from(refs)
+        .filter(ref => ref.textContent.match(reg))
+        .reduce((acc, ref) => {
+            acc.push(ref.textContent.match(reg))
+            return acc
+        }, [])
+        .sort((a,b) => {
+            return parseInt(b.groups.release) - parseInt(a.groups.release) || parseFloat(b.groups.minor) - parseFloat(a.groups.minor)
+        })
     var matchOn = matches[0].input
     if (matchOn !== imageName) {
         console.log("We've got a new release! \\o/");
         console.log(matchOn)
         console.log("Old match")
         console.log(imageName)
+        console.log(matches[0])
+        var newLine = ""
+        if (matches[0].groups.minor) {
+            newLine = `UBUNTU_SERVER_RPI_IMAGE=\"${url}${matches[0].groups.release}.04.${matches[0].groups.minor}/release/ubuntu-${matches[0].groups.release}.04.${matches[0].groups.minor}-preinstalled-server-armhf+raspi.img.xz\"`
+        } else {
+            newLine = `UBUNTU_SERVER_RPI_IMAGE=\"${url}${matches[0].groups.release}.04/release/ubuntu-${matches[0].groups.release}.04-preinstalled-server-armhf+raspi.img.xz\"`
+        }
+        console.log(newLine)
+        // updateURLLink(`UBUNTU_SERVER_RPI_IMAGE=\"${url}${matchOn}/release/ubuntu-${matchOn}-preinstalled-server-armhf+raspi3.img.xz\"`)
     }
 });
+
+function updateURLLink(newLine) {
+    console.error("Updating the variable")
+    try {
+        const data = fs.readFileSync('test/run-tests.sh', 'utf8').replace(/## Auto-update\nUBUNTU_SERVER_RPI_IMAGE_URL=.*/, `## Auto-update\n${newLine}\n`)
+        fs.writeFile('test/run-tests.sh', data, (err, data) => {
+            if (err) {
+                console.error(err)
+            }
+        })
+    } catch (err) {
+        console.error(err)
+        process.exit(1)
+    }
+}
