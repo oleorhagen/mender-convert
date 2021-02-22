@@ -20,7 +20,7 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v3
         with:
-            title: Image-Bot: New images available
+            title: "Image-Bot: New images available"
             body: |
                 New images are available for update
             commit-message: Image-Bot - Image updates
