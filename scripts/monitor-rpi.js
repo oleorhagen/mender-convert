@@ -59,7 +59,7 @@ JSDOM.fromURL(url, {}).then(dom => {
 function updateURLLink(newLine) {
     console.error("Updating the variable")
     try {
-        const data = fs.readFileSync('test/run-tests.sh', 'utf8').replace(/## Auto-update\nRASPBIAN_IMAGE_URL=.*/, `## Auto-update\n${newLine}\n`)
+        const data = fs.readFileSync('test/run-tests.sh', 'utf8').replace(/## Auto-update\nRASPBIAN_IMAGE_URL=.*/, `## Auto-update\n${newLine}`)
         fs.writeFile('test/run-tests.sh', data, (err, data) => {
             if (err) {
                 console.error(err)
