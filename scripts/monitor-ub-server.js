@@ -37,9 +37,9 @@ JSDOM.fromURL(url, {}).then(dom => {
         console.log("We've got a new release! \\o/");
         var newLine = ""
         if (matches[0].groups.minor) {
-            newLine = `UBUNTU_SERVER_RPI_IMAGE=\"${url}${matches[0].groups.release}.04.${matches[0].groups.minor}/release/ubuntu-${matches[0].groups.release}.04.${matches[0].groups.minor}-preinstalled-server-armhf+raspi.img.xz\"`
+            newLine = `UBUNTU_SERVER_RPI_IMAGE_URL=\"${url}${matches[0].groups.release}.04.${matches[0].groups.minor}/release/ubuntu-${matches[0].groups.release}.04.${matches[0].groups.minor}-preinstalled-server-armhf+raspi.img.xz\"`
         } else {
-            newLine = `UBUNTU_SERVER_RPI_IMAGE=\"${url}${matches[0].groups.release}.04/release/ubuntu-${matches[0].groups.release}.04-preinstalled-server-armhf+raspi.img.xz\"`
+            newLine = `UBUNTU_SERVER_RPI_IMAGE_URL=\"${url}${matches[0].groups.release}.04/release/ubuntu-${matches[0].groups.release}.04-preinstalled-server-armhf+raspi.img.xz\"`
         }
         updateURLLink(newLine)
     }
