@@ -1,7 +1,5 @@
 name: automatically-update-test-links
-on:
-  schedule:
-    - cron: "0 03 * * 1"
+on: ['push']
 jobs:
   createPullRequest:
     runs-on: ubuntu-latest
