@@ -27,7 +27,7 @@ jobs:
                 Image-Bot - Image updates
 
                 Changelog: Title
-            # committer: mender-test-bot <mender-test-bot@mender.io>
+            committer: mender-test-bot <mender-test-bot@mender.io>
             author: mender-test-bot <mender-test-bot@mender.io>
             signoff: true
 
