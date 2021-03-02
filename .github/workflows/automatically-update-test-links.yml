@@ -25,7 +25,14 @@ jobs:
             title: "Image-Bot: New images available"
             body: |
                 New images are available for update
-            commit-message: Image-Bot - Image updates
+            commit-message: |
+                Image-Bot - Image updates
+
+                Changelog: Title
+            committer: mender-test-bot <mender-test-bot@mender.io>
+            author: mender-test-bot <mender-test-bot@mender.io>
+            signoff: true
+
 
       - name: Check outputs
         run: |
