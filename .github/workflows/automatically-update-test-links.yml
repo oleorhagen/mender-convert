@@ -26,6 +26,9 @@ jobs:
             body: |
                 New images are available for update
             commit-message: Image-Bot - Image updates
+            committer: mender-test-bot@github.com
+            signoff: true
+
 
       - name: Check outputs
         run: |
