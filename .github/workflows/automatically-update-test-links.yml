@@ -25,6 +25,7 @@ jobs:
                 New images are available for update
             commit-message: Image-Bot - Image updates
             committer: mender-test-bot@github.com
+            committer: mender-test-bot@mender.io
             signoff: true
 
 
