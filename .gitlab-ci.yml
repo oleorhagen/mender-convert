@@ -13,6 +13,7 @@ variables:
   RASPBIAN_URL: https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2021-01-12/2021-01-11-raspios-buster-armhf-lite.zip
   RASPBIAN_NAME: 2021-01-11-raspios-buster-armhf-lite
 
+  BUILD_MENDER_CONVERT: "true"
   TEST_MENDER_CONVERT: "true"
 
   # Which version of mender-convert to use in published image name. Normally
@@ -66,6 +67,9 @@ build:
     expire_in: 2w
     paths:
       - image.tar
+  rules:
+    - if: '$BUILD_MENDER_CONVERT == "true"'
+
 
 test:check-shell-formatting:
   before_script:
