@@ -76,12 +76,14 @@ function deb_from_repo_pool_get()  {
     local -r package="${4}"
     local -r version="${5}"
     local -r component="${6:-main}"
+    # TODO - add distro and version params
 
     local -r initial="$(echo $package | head -c 1)"
     local -r deb_package_path="pool/${component}/${initial}/${package}/${package}_${version}_${architecture}.deb"
 
     local -r filename=$(basename $deb_package_path)
-    run_and_log_cmd "wget -Nq ${repo_url}/${deb_package_path} -P ${download_dir}"
+    # Distro-name = debian/ubuntu
+    run_and_log_cmd "wget -Nq ${repo_url}/${distro_name}/${deb_package_path} -P ${download_dir}"
 
     rm -f /tmp/Packages
     log_info "Successfully downloaded ${filename}"

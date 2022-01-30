@@ -113,6 +113,14 @@ MENDER_DATA_PART_SIZE_MB="128"
 # Default is 8MB
 MENDER_PARTITION_ALIGNMENT="8388608"
 
+#
+# Debian package channel
+#
+# (debian,ubuntu)x(buster,bullseye) available
+# debian:bullseye - default
+DISTRO_NAME="debian"
+DISTRO_VERSION="bullseye"
+
 # Install Mender client
 #
 MENDER_CLIENT_INSTALL="y"
